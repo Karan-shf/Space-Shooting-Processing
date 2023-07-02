@@ -18,6 +18,8 @@ public class Boss implements ISpaceObject {
     boolean downY = true;
     boolean downX = true;
 
+    boolean defeated = false;
+
     public Boss(int extent, int bossX, int bossY,int Hp, int r, int g, int b) {
         Extent = extent;
         BossX = bossX;

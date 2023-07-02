@@ -107,6 +107,7 @@ public class Main extends PApplet {
                         if (Block.wave4time<=210) {
                             spaceShip.showObject();
                             spaceShip.setSpaceShipX(mouseX);
+                            changeSpaceShipColor();
                             fill(205,0,0);
                             textSize(90);
                             if (frameCount%60>=30 && frameCount%60<60) {
@@ -533,6 +534,7 @@ public class Main extends PApplet {
         CheckCrash(wave_Blocks);
         CheckWave();
         RemoveOutlineBullets();
+        changeSpaceShipColor();
         fill(26, 9, 176);
         textSize(30);
         text("Score: "+GameScore,10,40);
@@ -575,6 +577,7 @@ public class Main extends PApplet {
                 RemoveOutlineBullets();
 
                 if (boss.getHP()<=0) {
+                    GameScore+=10000;
                     boss.stage=2;
                 }
 
@@ -628,6 +631,9 @@ public class Main extends PApplet {
                     rect(225, 50, (miniBoss1.getHP()/5000)*300 , 15);
                     
                     
+                } else if (!boss.defeated) {
+                    GameScore+=1000;
+                    boss.defeated = true;
                 }
                 if (miniBoss2.getHP()>0) {
                     miniBoss2.showObject();
@@ -635,6 +641,9 @@ public class Main extends PApplet {
                     CheckBossCrash(miniBoss2);
                     fill(255, 0, 0);
                     rect(225, 70, (miniBoss2.getHP()/5000)*300 , 15);
+                } else if (!boss.defeated) {
+                    GameScore+=1000;
+                    boss.defeated = true;
                 }
                 if (miniBoss3.getHP()>0) {
                     miniBoss3.showObject();
@@ -642,6 +651,9 @@ public class Main extends PApplet {
                     CheckBossCrash(miniBoss3);
                     fill(255, 0, 0);
                     rect(225, 90, (miniBoss3.getHP()/5000)*300 , 15);
+                } else if (!boss.defeated) {
+                    GameScore+=1000;
+                    boss.defeated = true;
                 }
 
                 if (miniBoss1.getHP()<=0 && miniBoss2.getHP()<=0 && miniBoss3.getHP()<=0) {
@@ -725,7 +737,17 @@ public class Main extends PApplet {
                 if (SpaceShip.bullets.get(i).getBulletX()+Bullet.getBulletWidth()>block.getBlockX() && SpaceShip.bullets.get(i).getBulletX()<block.getBlockX()+Block.getBlockWidth()
                  && SpaceShip.bullets.get(i).getBulletY()+Bullet.getBulletHeight()>block.getBlockY() && SpaceShip.bullets.get(i).getBulletY()<block.getBlockY()+Block.getBlockHeight() ) {
                     block.SetHP(block.GetHP()-Bullet.getDamage());
-                    GameScore+=10;
+                    switch (GameSpeed){
+                        case 1:
+                            GameScore+=5;
+                            break;
+                        case 2:
+                            GameScore+=10;
+                            break;
+                        case 3:
+                            GameScore+=20;
+                            break;
+                    }
                     SpaceShip.bullets.remove(i);
                 }
             }
@@ -993,20 +1015,21 @@ public class Main extends PApplet {
     public void changeSpaceShipColor(){
 
         switch (Lifes) {
+            
             case 5:
-                spaceShip.setHeadRGB(255,255,255);
+                spaceShip.setRGB(255,255,255);
                 break;
             case 4:
-                spaceShip.setHeadRGB(149, 230, 155);
+                spaceShip.setRGB(235, 176, 167);
                 break;
             case 3:
-                spaceShip.setHeadRGB(127, 227, 134);
+                spaceShip.setRGB(230, 146, 133);
                 break;
             case 2:
-                spaceShip.setHeadRGB(95, 227, 105);
+                spaceShip.setRGB(227, 111, 93);
                 break;
             case 1:
-                spaceShip.setHeadRGB(32, 227, 47);
+                spaceShip.setRGB(219, 69, 46);
                 break;
         }
            
