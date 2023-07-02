@@ -16,6 +16,7 @@ public class Main extends PApplet {
     public static int Lifes = 5;
     public static int Wave = 1;
     public static int SbulletsNum = 6;
+    public static int welcomeStage=1;
     public static ArrayList<Block> Wave1_Blocks = new ArrayList<Block>();
     public static ArrayList<Block> Wave2_Blocks = new ArrayList<Block>();
     public static ArrayList<Block> Wave3_Blocks = new ArrayList<Block>();
@@ -25,8 +26,12 @@ public class Main extends PApplet {
     public static Boss miniBoss1;
     public static Boss miniBoss2;
     public static Boss miniBoss3;
+    public static PImage Game_BG1;
+    public static PImage Game_BG2;
+    public static PImage Game_BG3;
+    public static PImage GameOver_BG;
+    public static PImage Menu_BG;
 
-    public static int welcomeStage=1;
 
     public static void main(String[] args) {
         PApplet.main("Main", args);
@@ -38,6 +43,11 @@ public class Main extends PApplet {
         Block.CraeteBlocks();
         spaceShip = new SpaceShip(mouseX,255,255,255);
         boss = new Boss(300,300,-400,100000,232, 59, 117);
+        Game_BG1 = loadImage("src_4/images/stars1.png");
+        Game_BG2 = loadImage("src_4/images/stars2.png");
+        Game_BG3 = loadImage("src_4/images/stars3.png");
+        GameOver_BG = loadImage("src_4/images/GameOver.jpg");
+        Menu_BG = loadImage("src_4/images/menu.jpg");
     }
     
     @Override
@@ -68,7 +78,13 @@ public class Main extends PApplet {
                 }
                 break;
             case 0:
-                background(0,0,0);
+                if (frameCount%30>=0 && frameCount%30<10){
+                    background(Game_BG1);
+                } else if (frameCount>=10 && frameCount%30<20) {
+                    background(Game_BG2);
+                } else {
+                    background(Game_BG3);
+                }
                 stroke(209,59,187);
                 line(0,670,1100,670);
                 switch (Wave) {
@@ -76,7 +92,9 @@ public class Main extends PApplet {
                         PlayGame(Wave1_Blocks);
                         break;
                     case 2:
-                        if (Block.wave2time<=210) {
+                    if (Block.wave2time<=210) {
+                            SpaceShip.bullets.clear();
+                            SpaceShip.specialBullets.clear();
                             spaceShip.showObject();
                             spaceShip.setSpaceShipX(mouseX);
                             fill(205,0,0);
@@ -90,7 +108,9 @@ public class Main extends PApplet {
                         }
                         break;
                     case 3:
-                        if (Block.wave3time<=210) {
+                    if (Block.wave3time<=210) {
+                            SpaceShip.bullets.clear();
+                            SpaceShip.specialBullets.clear();
                             spaceShip.showObject();
                             spaceShip.setSpaceShipX(mouseX);
                             fill(205,0,0);
@@ -104,7 +124,9 @@ public class Main extends PApplet {
                         }
                         break;
                     case 4:
-                        if (Block.wave4time<=210) {
+                    if (Block.wave4time<=210) {
+                            SpaceShip.bullets.clear();
+                            SpaceShip.specialBullets.clear();
                             spaceShip.showObject();
                             spaceShip.setSpaceShipX(mouseX);
                             changeSpaceShipColor();
@@ -135,7 +157,7 @@ public class Main extends PApplet {
 
     public void WelcomeMenu() {
         
-        background(0);
+        background(Menu_BG);
         
         fill(255);
         textSize(60);
@@ -274,7 +296,7 @@ public class Main extends PApplet {
     }
 
     public void HelpPleaaaaase() {
-        background(0);
+        background(Menu_BG);
         fill(255);
         textSize(60);
         text("Dodge Blocks",10,50);
@@ -330,7 +352,7 @@ public class Main extends PApplet {
 
     public void ChooseGameSpeed() {
 
-        background(0);
+        background(Menu_BG);
 
         int Slow_box_R=0;
         int Slow_box_G=0;
@@ -445,10 +467,10 @@ public class Main extends PApplet {
     }
 
     public void showTopScores() {
-        background(0);
+        background(Menu_BG);
         ArrayList<Integer> highscores = CheckHighScore();
         
-        fill(20, 11, 143);
+        fill(197, 230, 34);
         textSize(80);
         text("Top 5 Scores:",30,100);
         stroke(156, 11, 69);
@@ -921,12 +943,15 @@ public class Main extends PApplet {
     }
 
     public void GameOver(){
-        background(0,0,0);
-        fill(250,0,0);
-        textSize(70);
-        text("You Lost! :(",30,250);
-        textSize(40);
-        text("Your Score: "+GameScore,40,350);
+        background(GameOver_BG);
+        fill(255);
+        PFont font = createFont("src_4/fonts/Pixeled.ttf", 50);
+        
+        // textSize(70);
+        // text("You Lost! :(",30,250);
+        // textSize(40);
+        textFont(font);
+        text("Your Score: "+GameScore,10,550);
     }
 
     public void GameWon() {
@@ -934,19 +959,22 @@ public class Main extends PApplet {
         ArrayList<Integer> highscores = CheckHighScore();
        
         background(0,0,0);
+        PFont font = createFont("Pixeled.ttf", 50);
+        textFont(font);
         if (GameScore>=highscores.get(0)){
-            fill(181, 24, 31);
-            textSize(40);
-            text("NEW HIGH SCORE!!!",30,120);
+            if (frameCount%60>=0 && frameCount%60<30) {
+                fill(181, 24, 31);
+                textSize(40);
+                text("NEW HIGH SCORE!!!",30,80);
+            }
         }
         fill(19, 110, 43);
         textSize(50);
-        text("Congratulations",30,200);
-        text("You Won!!",30,250);
-        textSize(40);
-        text("Your Final Score: "+GameScore,30,350);
-        text("Remaining Lives: "+Lifes,30,420);
-        
+        text("Congratulations",30,160);
+        text("You Won!!",30,230);
+        textSize(35);
+        text("Your Final Score: "+GameScore,30,300);
+        text("Remaining Lives "+Lifes,30,360);
         
         if (!savedInDatabase) {
             try {
@@ -967,11 +995,12 @@ public class Main extends PApplet {
         
         highscores = CheckHighScore();
         fill(126, 18, 130);
-        text("Top 5 Scores:",30,475);
-        text("1. "+highscores.get(0),30,520);
-        text("2. "+highscores.get(1),30,560);
-        text("3. "+highscores.get(2),30,600);
-        text("4. "+highscores.get(3),30,640);
+        text("Top 5 Scores:",30,430);
+        textSize(30);
+        text("1. "+highscores.get(0),30,480);
+        text("2. "+highscores.get(1),30,530);
+        text("3. "+highscores.get(2),30,580);
+        text("4. "+highscores.get(3),30,630);
         text("5. "+highscores.get(4),30,680);
 
     }
